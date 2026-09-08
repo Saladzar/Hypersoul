@@ -12,7 +12,6 @@ public class MenuController : MonoBehaviour
     private PlayerInputs playerInputs;
 
     private bool isPaused = false;
-    private bool isInGame = false;
 
     void Start()
     {
@@ -40,8 +39,7 @@ public class MenuController : MonoBehaviour
             Time.timeScale = 1f;
             pauseScreen.SetActive(false);
             isPaused = false;
-        }
-        else
+        } else
         {
             Time.timeScale = 0f;
             pauseScreen.SetActive(true);

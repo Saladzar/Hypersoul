@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static ScoreManager Instance { get; private set; }
+
     [SerializeField] private Transform player;
     [SerializeField] private TextMeshProUGUI scoreText;
 
@@ -12,6 +14,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
+        Instance = this;
         UpdateScore();
     }
 

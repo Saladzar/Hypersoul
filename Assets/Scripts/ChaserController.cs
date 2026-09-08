@@ -14,9 +14,7 @@ public class ChaserController : MonoBehaviour
         transform.position += moveSpeed * Time.deltaTime * Vector3.right;
 
         if (Vector3.Distance(transform.position, player.position) > maxDistance)
-        {
             transform.position = new Vector3(player.position.x - maxDistance, transform.position.y, transform.position.z);
-        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)

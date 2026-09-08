@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour
 
     [Header("Generation Settings")]
     [SerializeField] private float chunkWidth = 20f;
-    [SerializeField] private float generateDistance = 20f;
+    [SerializeField] private float generateDistance = 40f;
     [SerializeField] private float despawnDistance = 60f;
     [SerializeField] private float waitTime = 1f; // Time to wait before generating the first chunk
 
@@ -37,9 +37,7 @@ public class LevelGenerator : MonoBehaviour
         SpawnWalls(0f);
         
         for (int i = -1; i < 3; i++)
-        {
             SpawnBackground(i * chunkWidth);
-        }
 
         StartCoroutine(GenerateInitialChunk());
     }
@@ -49,9 +47,7 @@ public class LevelGenerator : MonoBehaviour
         furthestPlayerX = Mathf.Max(furthestPlayerX, player.position.x);
 
         if (furthestPlayerX + generateDistance > furthestGeneratedX)
-        {
             GenerateChunk();
-        }
 
         DespawnObjects();
     }
@@ -67,11 +63,7 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int i = 0; i < obstacleCount; i++)
             {
-                float randomX = Random.Range(
-                    chunkStartX,
-                    chunkStartX + chunkWidth
-                );
-
+                float randomX = Random.Range(chunkStartX, chunkStartX + chunkWidth);
                 float randomY = Random.Range(minObstacleY, maxObstacleY);
                 float randomRotation = Random.Range(0f, 360f);
                 float randomYScale = Random.Range(minObstacleScale, maxObstacleScale);

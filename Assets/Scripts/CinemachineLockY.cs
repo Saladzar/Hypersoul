@@ -16,11 +16,7 @@ public class CinemachineLockY : CinemachineExtension
         currentY = TargetYPosition; 
     }
 
-    protected override void PostPipelineStageCallback(
-        CinemachineVirtualCameraBase vcam,
-        CinemachineCore.Stage stage,
-        ref CameraState state,
-        float deltaTime)
+    protected override void PostPipelineStageCallback (CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
         if (stage == CinemachineCore.Stage.Body)
         {

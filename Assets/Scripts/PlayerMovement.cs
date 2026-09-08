@@ -26,18 +26,16 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector2 newDir = PlayerDirection.GetDirection();
 
-            //Checks if direction points back into wall that player just bounced off of.
+            //Checks if direction points back into wall that player just bounced off of to have it bounce away instead if necessary.
             if (collision.contactCount > 0)
             {
                 Vector2 contactNormal = collision.contacts[0].normal;
                 if (Vector2.Dot(newDir, contactNormal) < 0f)
-                {
-                    //If it does, reverse the direction to point away from the wall.
                     newDir = Vector2.Reflect(newDir, contactNormal);
-                }
             }
 
             direction = newDir;
+            ScoreManager.Instance.AddBounceScore(1);
         }
     }
 
