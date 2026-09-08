@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         playerBody = GetComponent<Rigidbody2D>();
-        direction = PlayerDirection.GetDirection();
+        direction = Vector2.right;
     }
 
     void FixedUpdate()

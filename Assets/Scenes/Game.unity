@@ -782,7 +782,7 @@ MonoBehaviour:
   wallPrefab: {fileID: 335901888532732248, guid: 6379a0799ce6ffe4596bc621c69517e8, type: 3}
   backgroundPrefab: {fileID: 8895171594049502244, guid: f9dd1f607aa059e4caf3cd9c24d84961, type: 3}
   chunkWidth: 20
-  generateDistance: 30
+  generateDistance: 40
   despawnDistance: 60
   waitTime: 1
   minObstacleCount: 3
@@ -856,7 +856,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 00000000bd917321
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1075,7 +1075,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 208.33936, y: 58.339386}
+  m_SizeDelta: {x: 208.33936, y: 80}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &738605168
 MonoBehaviour:
@@ -2072,8 +2072,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 561222077
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
