@@ -13,9 +13,19 @@ public class MenuController : MonoBehaviour
 
     private bool isPaused = false;
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     void Start()
     {
-        Instance = this;
         playerInputs = new PlayerInputs();
         playerInputs.InputMap.Pause.performed += ctx => OnPause();
         playerInputs.Enable();
@@ -30,6 +40,9 @@ public class MenuController : MonoBehaviour
     {
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
+        GameOverScreen.Instance.ShowGameOverScreen(ScoreManager.Instance.GetTotalScore(), 
+                PlayerPrefs.GetInt("HighScore", 0), 
+                ScoreManager.Instance.IsNewHighScore());
     }
 
     public void OnPause()
@@ -47,8 +60,15 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    public void OnReplay()
+    {
+        ScoreManager.Instance.SaveHighScore();
+        SceneManager.LoadScene("Game");
+    }
+
     public void OnQuit()
     {
+        ScoreManager.Instance.SaveHighScore();
         SceneManager.LoadScene("MainMenu");
     }
 

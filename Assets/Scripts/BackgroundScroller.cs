@@ -10,7 +10,9 @@ public class BackgroundScroller : MonoBehaviour
 
     void Start()
     {
-        backgroundMaterial = GetComponent<MeshRenderer>().material;
+        Renderer backgroundRenderer = GetComponent<Renderer>();
+
+        backgroundMaterial = backgroundRenderer.material;
         offset = backgroundMaterial.mainTextureOffset;
     }
 

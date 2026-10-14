@@ -34,7 +34,7 @@ public class LevelGenerator : MonoBehaviour
         furthestGeneratedX = 0f;
         furthestPlayerX = 0f;
 
-        SpawnWalls(0f);
+        //SpawnWalls(0f);
 
         StartCoroutine(GenerateInitialChunk());
     }
@@ -73,7 +73,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        SpawnWalls(chunkStartX + chunkWidth / 2f);
+        //SpawnWalls(chunkStartX + chunkWidth / 2f);
 
         furthestGeneratedX += chunkWidth;
 

@@ -13,11 +13,21 @@ public class ScoreManager : MonoBehaviour
     private int distanceScore = 0;
     private int bounceScore = 0;
     private int highScore = 0;
+    private bool isNewHighScore = false;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     void Start()
     {
-        Instance = this;
-
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         UpdateScore();
     }
@@ -37,17 +47,28 @@ public class ScoreManager : MonoBehaviour
     private void UpdateScore()
     {
         if (distanceScore + bounceScore > highScore)
-        {
-            highScore = distanceScore + bounceScore;
-            PlayerPrefs.SetInt("HighScore", highScore);
-        }
+            isNewHighScore = true;
 
-        scoreText.text = "Score: " + (distanceScore + bounceScore);
-        highScoreText.text = "High Score: " + highScore;
+        scoreText.text = "Score: " + (distanceScore + bounceScore).ToString().PadLeft(6, '0');
+        highScoreText.text = "High Score: " + highScore.ToString().PadLeft(6, '0');
     }
 
     public int GetTotalScore()
     {
         return distanceScore + bounceScore;
+    }
+
+    public bool IsNewHighScore()
+    {
+        return isNewHighScore;
+    }
+
+    public void SaveHighScore()
+    {
+        if (isNewHighScore)
+        {
+            PlayerPrefs.SetInt("HighScore", distanceScore + bounceScore);
+            PlayerPrefs.Save();
+        }
     }
 }
