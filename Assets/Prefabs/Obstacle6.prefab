@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2095867572200308362, guid: 275b3dc1033b23049ac5787abc1f2125, type: 3}
       propertyPath: m_Name
-      value: Obstacle6 Variant
+      value: Obstacle6
       objectReference: {fileID: 0}
     - target: {fileID: 7006682065801696608, guid: 275b3dc1033b23049ac5787abc1f2125, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x

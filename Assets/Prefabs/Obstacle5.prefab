@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4049377194595676917, guid: 5af4c9200ab744e4d9abbb73f2e7b440, type: 3}
       propertyPath: m_Name
-      value: Obstacle5 Variant
+      value: Obstacle5
       objectReference: {fileID: 0}
     - target: {fileID: 6756831316834813804, guid: 5af4c9200ab744e4d9abbb73f2e7b440, type: 3}
       propertyPath: m_Sprite

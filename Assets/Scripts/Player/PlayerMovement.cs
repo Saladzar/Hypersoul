@@ -1,10 +1,17 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private Collider2D playerCollider;
     [SerializeField] float startingMoveSpeed = 5f;
+    [SerializeField] int bounceScoreValue = 2;
+    [SerializeField] private float stuckCheckDelay = 2f;
 
+    private const float StuckMovementThreshold = 0.01f;
+    private Vector2 previousPosition;
+    private float stuckTimer;
     private float currentMoveSpeed;
     private Vector2 direction;
     private Rigidbody2D playerBody;
@@ -14,11 +21,27 @@ public class PlayerMovement : MonoBehaviour
         playerBody = GetComponent<Rigidbody2D>();
         direction = Vector2.right;
         currentMoveSpeed = startingMoveSpeed;
+        previousPosition = playerBody.position;
     }
 
     void Update()
     {
         currentMoveSpeed = startingMoveSpeed * DifficultyTracker.Instance.GetCurrentDifficulty();
+
+        Vector2 currentPosition = playerBody.position;
+        if ((currentPosition - previousPosition).sqrMagnitude <= StuckMovementThreshold * StuckMovementThreshold)
+        {
+            stuckTimer += Time.deltaTime;
+            if (stuckTimer >= stuckCheckDelay)
+            {
+                DestroyTouchingObstacles();
+                stuckTimer = 0f;
+            }
+        }
+        else
+            stuckTimer = 0f;
+
+        previousPosition = currentPosition;
     }
 
     void FixedUpdate()
@@ -26,11 +49,24 @@ public class PlayerMovement : MonoBehaviour
         playerBody.linearVelocity = direction * currentMoveSpeed;
     }
 
+    private void DestroyTouchingObstacles()
+    {
+        List<Collider2D> touchingColliders = new List<Collider2D>();
+        playerCollider.GetContacts(touchingColliders);
+
+        foreach (Collider2D collider in touchingColliders)
+        {
+            if (collider.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
+                Destroy(collider.gameObject);
+        }
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
             PlayerAnimations.Instance.Impact();
+            AudioPlayer.Instance.PlayAudioClip(AudioClipType.Bounce);
 
             Vector2 newDir = PlayerDirection.GetDirection();
 
@@ -43,12 +79,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             direction = newDir;
-            ScoreManager.Instance.AddBounceScore(1);
+            ScoreManager.Instance.AddBounceScore(bounceScoreValue);
         }
-    }
-
-    private float GetAngleOfMovement()
-    {
-        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f;
     }
 }

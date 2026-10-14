@@ -6,12 +6,20 @@ public class ChunkValidator : MonoBehaviour
     public static ChunkValidator Instance { get; private set; }
 
     [SerializeField] private LayerMask obstacleLayers;
-    [SerializeField] private float playerRadius = 0.25f;
+    [SerializeField] private float playerRadius = 1f;
     [SerializeField] private int pathSamples = 15;
     [SerializeField] private int directionsPerBounce = 13;
     [SerializeField] private int maxBounces = 12;
     [SerializeField] private int maxTestStates = 1000;
-    [SerializeField] private int maxAttempts = 20;
+    [SerializeField] public int maxAttempts = 20;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
+    }
 
     private struct PathState
     {
@@ -35,7 +43,7 @@ public class ChunkValidator : MonoBehaviour
 
         for (int i = 0; i < pathSamples; i++)
         {
-            float t = pathSamples <= 1 ? 0.5f : (float) i / (pathSamples - 1);
+            float t = pathSamples <= 1 ? 0.5f : (float)i / (pathSamples - 1);
 
             float y = Mathf.Lerp(minObstacleY + playerRadius, maxObstacleY - playerRadius, t);
 
@@ -63,16 +71,29 @@ public class ChunkValidator : MonoBehaviour
 
             float exitDistance = dir.x > 0.001f ? (chunkEndX - pos.x) / dir.x : float.PositiveInfinity;
 
+            if (dir.x > 0.001f)
+            {
+                float exitY = pos.y + dir.y * exitDistance;
+
+                if (exitY < minObstacleY + playerRadius || exitY > maxObstacleY - playerRadius)
+                    exitDistance = -1f;
+            }
+
             float castDistance = Mathf.Min(exitDistance, chunkWidth * 2f);
 
             RaycastHit2D hit = Physics2D.CircleCast(pos, playerRadius, dir, castDistance, obstacleLayers);
 
             if (!hit.collider)
             {
-                if (dir.x > 0.001f && exitDistance > 0f && exitDistance <= chunkWidth * 2f)
-                    return true;
+                if (dir.x <= 0.001f || exitDistance <= 0f || exitDistance > chunkWidth * 2f)
+                    continue;
 
-                continue;
+                Vector2 exitPosition = pos + dir * exitDistance;
+
+                if (exitPosition.y < minObstacleY + playerRadius || exitPosition.y > maxObstacleY - playerRadius)
+                    continue;
+
+                return true;
             }
 
             if (state.bounces >= maxBounces)

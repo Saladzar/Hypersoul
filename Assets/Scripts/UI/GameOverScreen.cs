@@ -41,11 +41,13 @@ public class GameOverScreen : MonoBehaviour
 
     public void OnReplayButtonClicked()
     {
+        AudioPlayer.Instance.PlayAudioClip(AudioClipType.Enter);
         MenuController.Instance.OnReplay();
     }
 
     public void OnQuitButtonClicked()
     {
+        AudioPlayer.Instance.PlayAudioClip(AudioClipType.Quit);
         MenuController.Instance.OnQuit();
     }
 }

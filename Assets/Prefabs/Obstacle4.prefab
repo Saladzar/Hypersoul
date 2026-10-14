@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 4014501481546223150, guid: 8d3f90c0da59de24fb4c53ab461bed31, type: 3}
     - target: {fileID: 5561513068803179155, guid: edf410a2990bc564cbfab1999ea644ae, type: 3}
       propertyPath: m_Name
-      value: Obstacle4 Variant
+      value: Obstacle4
       objectReference: {fileID: 0}
     - target: {fileID: 6693605405477339766, guid: edf410a2990bc564cbfab1999ea644ae, type: 3}
       propertyPath: m_LocalPosition.x

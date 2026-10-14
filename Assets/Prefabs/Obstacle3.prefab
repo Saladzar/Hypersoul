@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3123548993357698759, guid: 29bcd5a15027ba146bcc1da0c6cb1c9b, type: 3}
       propertyPath: m_Name
-      value: Obstacle3 Variant
+      value: Obstacle3
       objectReference: {fileID: 0}
     - target: {fileID: 4220738505937327650, guid: 29bcd5a15027ba146bcc1da0c6cb1c9b, type: 3}
       propertyPath: m_LocalPosition.x

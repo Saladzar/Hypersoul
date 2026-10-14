@@ -31,10 +31,9 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
-        furthestGeneratedX = 0f;
-        furthestPlayerX = 0f;
-
-        //SpawnWalls(0f);
+        furthestPlayerX = player.position.x;
+        furthestGeneratedX = player.position.x + chunkWidth;
+        isGenerating = false;
 
         StartCoroutine(GenerateInitialChunk());
     }
@@ -43,7 +42,7 @@ public class LevelGenerator : MonoBehaviour
     {
         furthestPlayerX = Mathf.Max(furthestPlayerX, player.position.x);
 
-        if (furthestPlayerX + generateDistance > furthestGeneratedX)
+        if (furthestPlayerX + generateDistance > furthestGeneratedX && isGenerating)
             GenerateChunk();
 
         DespawnObjects();
@@ -51,48 +50,52 @@ public class LevelGenerator : MonoBehaviour
 
     private void GenerateChunk()
     {
-        float chunkStartX = furthestGeneratedX;
-        //float difficulty = Mathf.Clamp01(furthestPlayerX / 100f);
+        float chunkStartX = Mathf.Max(furthestGeneratedX, player.position.x + generateDistance);
+        bool validChunk = false;
 
-        int obstacleCount = Random.Range(minObstacleCount, maxObstacleCount + 1);
-
-        if (isGenerating)
+        for (int attempt = 0; attempt < ChunkValidator.Instance.maxAttempts; attempt++)
         {
+            List<GameObject> candidates = new List<GameObject>();
+
+            int obstacleCount = Random.Range(minObstacleCount, maxObstacleCount + 1);
+
             for (int i = 0; i < obstacleCount; i++)
             {
-                float randomX = Random.Range(chunkStartX, chunkStartX + chunkWidth);
-                float randomY = Random.Range(minObstacleY, maxObstacleY);
-                float randomRotation = Random.Range(0f, 360f);
-                // float randomYScale = Random.Range(minObstacleScale, maxObstacleScale);
-                // float randomXScale = Random.Range(minObstacleScale, maxObstacleScale);
-                float randomScale = Random.Range(minObstacleScale, maxObstacleScale);
+                float x = Random.Range(chunkStartX, chunkStartX + chunkWidth);
+                float y = Random.Range(minObstacleY, maxObstacleY);
+                float rotation = Random.Range(0f, 360f);
+                float scale = Random.Range(minObstacleScale, maxObstacleScale);
 
-                Vector3 scale = new Vector3(randomScale, randomScale, 1f);
+                GameObject prefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
 
-                SpawnObstacle(new Vector2(randomX, randomY), Quaternion.Euler(0, 0, randomRotation), scale);
+                GameObject obstacle = Instantiate(prefab, new Vector2(x, y), Quaternion.Euler(0, 0, rotation));
+
+                obstacle.transform.localScale = new Vector3(scale, scale, 1f);
+
+                candidates.Add(obstacle);
             }
+
+            Physics2D.SyncTransforms();
+
+            if (ChunkValidator.Instance.HasValidPath(chunkStartX, chunkWidth, minObstacleY, maxObstacleY))
+            {
+                generatedObjects.AddRange(candidates);
+                validChunk = true;
+                break;
+            }
+
+            foreach (GameObject obstacle in candidates)
+                Destroy(obstacle);
+
+            Physics2D.SyncTransforms();
         }
 
-        //SpawnWalls(chunkStartX + chunkWidth / 2f);
+        if (!validChunk)
+            Debug.LogWarning($"Could not generate valid chunk at X={chunkStartX}.");
 
         furthestGeneratedX += chunkWidth;
 
         CameraRotation.Instance.OnChunkGenerated();
-    }
-
-    private void SpawnObstacle(Vector2 vector2, Quaternion rotation, Vector3 scale)
-    {
-        GameObject selectedPrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-
-        GameObject obstacle = Instantiate(selectedPrefab, vector2, rotation);
-        obstacle.transform.localScale = scale;
-        generatedObjects.Add(obstacle);
-    }
-
-    private void SpawnWalls(float x)
-    {
-        GameObject wall = Instantiate(wallPrefab, new Vector2(x, 0), Quaternion.identity);
-        generatedObjects.Add(wall);
     }
 
     private void DespawnObjects()
@@ -100,6 +103,12 @@ public class LevelGenerator : MonoBehaviour
         for (int i = generatedObjects.Count - 1; i >= 0; i--)
         {
             GameObject gObject = generatedObjects[i];
+            if (gObject == null)
+            {
+                generatedObjects.RemoveAt(i);
+                continue;
+            }
+
             if (gObject.transform.position.x < furthestPlayerX - despawnDistance)
             {
                 generatedObjects.RemoveAt(i);

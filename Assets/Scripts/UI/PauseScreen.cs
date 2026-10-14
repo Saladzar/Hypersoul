@@ -8,11 +8,13 @@ public class PauseScreen : MonoBehaviour
 
     public void OnResumeButtonClicked()
     {
+        AudioPlayer.Instance.PlayAudioClip(AudioClipType.Enter);
         MenuController.Instance.OnPause();
     }
 
     public void OnQuitButtonClicked()
     {
+        AudioPlayer.Instance.PlayAudioClip(AudioClipType.Quit);
         MenuController.Instance.OnQuit();
     }
 }

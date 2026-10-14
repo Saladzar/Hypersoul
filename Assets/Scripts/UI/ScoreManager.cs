@@ -34,13 +34,13 @@ public class ScoreManager : MonoBehaviour
 
     void Update()
     {
-        distanceScore = Mathf.FloorToInt(player.position.x) / 10;
+        distanceScore = Mathf.FloorToInt(Mathf.FloorToInt(player.position.x) / 10 * DifficultyTracker.Instance.GetCurrentDifficulty());
         UpdateScore();
     }
 
     public void AddBounceScore(int amount)
     {
-        bounceScore += amount;
+        bounceScore += Mathf.FloorToInt(amount * DifficultyTracker.Instance.GetCurrentDifficulty());
         UpdateScore();
     }
 

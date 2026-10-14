@@ -63,12 +63,14 @@ public class MenuController : MonoBehaviour
 
     public void OnReplay()
     {
+        Time.timeScale = 1f;
         ScoreManager.Instance.SaveHighScore();
         SceneManager.LoadScene("Game");
     }
 
     public void OnQuit()
     {
+        Time.timeScale = 1f;
         ScoreManager.Instance.SaveHighScore();
         SceneManager.LoadScene("MainMenu");
     }
