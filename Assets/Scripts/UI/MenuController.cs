@@ -38,6 +38,7 @@ public class MenuController : MonoBehaviour
 
     public void OnPlayerLose()
     {
+        PlayerAnimations.Instance.Death();
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
         GameOverScreen.Instance.ShowGameOverScreen(ScoreManager.Instance.GetTotalScore(), 

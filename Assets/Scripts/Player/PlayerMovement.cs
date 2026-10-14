@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
+            PlayerAnimations.Instance.Impact();
+
             Vector2 newDir = PlayerDirection.GetDirection();
 
             //Checks if direction points back into wall that player just bounced off of to have it bounce away instead if necessary.
