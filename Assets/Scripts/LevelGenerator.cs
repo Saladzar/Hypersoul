@@ -6,7 +6,7 @@ public class LevelGenerator : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject obstaclePrefab;
+    [SerializeField] private GameObject[] obstaclePrefabs;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject backgroundPrefab;
 
@@ -21,8 +21,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private int maxObstacleCount = 8;
     [SerializeField] private float maxObstacleY = 8f;
     [SerializeField] private float minObstacleY = -8f;
-    [SerializeField] private float minObstacleScale = 0.5f;
-    [SerializeField] private float maxObstacleScale = 2f;
+    [SerializeField] private float minObstacleScale = 0.1f;
+    [SerializeField] private float maxObstacleScale = 1.5f;
 
     private bool isGenerating = false;
     private float furthestGeneratedX = 0f;
@@ -35,9 +35,6 @@ public class LevelGenerator : MonoBehaviour
         furthestPlayerX = 0f;
 
         SpawnWalls(0f);
-        
-        for (int i = -1; i < 3; i++)
-            SpawnBackground(i * chunkWidth);
 
         StartCoroutine(GenerateInitialChunk());
     }
@@ -66,23 +63,28 @@ public class LevelGenerator : MonoBehaviour
                 float randomX = Random.Range(chunkStartX, chunkStartX + chunkWidth);
                 float randomY = Random.Range(minObstacleY, maxObstacleY);
                 float randomRotation = Random.Range(0f, 360f);
-                float randomYScale = Random.Range(minObstacleScale, maxObstacleScale);
-                float randomXScale = Random.Range(minObstacleScale, maxObstacleScale);
-                Vector3 randomScale = new Vector3(randomXScale, randomYScale, 1f);
+                // float randomYScale = Random.Range(minObstacleScale, maxObstacleScale);
+                // float randomXScale = Random.Range(minObstacleScale, maxObstacleScale);
+                float randomScale = Random.Range(minObstacleScale, maxObstacleScale);
 
-                SpawnObstacle(new Vector2(randomX, randomY), Quaternion.Euler(0, 0, randomRotation), randomScale);
+                Vector3 scale = new Vector3(randomScale, randomScale, 1f);
+
+                SpawnObstacle(new Vector2(randomX, randomY), Quaternion.Euler(0, 0, randomRotation), scale);
             }
         }
 
         SpawnWalls(chunkStartX + chunkWidth / 2f);
-        SpawnBackground(chunkStartX + chunkWidth / 2f);
 
         furthestGeneratedX += chunkWidth;
+
+        CameraRotation.Instance.OnChunkGenerated();
     }
 
     private void SpawnObstacle(Vector2 vector2, Quaternion rotation, Vector3 scale)
     {
-        GameObject obstacle = Instantiate(obstaclePrefab, vector2, rotation);
+        GameObject selectedPrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+
+        GameObject obstacle = Instantiate(selectedPrefab, vector2, rotation);
         obstacle.transform.localScale = scale;
         generatedObjects.Add(obstacle);
     }
@@ -91,13 +93,6 @@ public class LevelGenerator : MonoBehaviour
     {
         GameObject wall = Instantiate(wallPrefab, new Vector2(x, 0), Quaternion.identity);
         generatedObjects.Add(wall);
-    }
-
-    private void SpawnBackground(float x)
-    {
-        return;
-        // GameObject background = Instantiate(backgroundPrefab, new Vector2(x, 0), Quaternion.identity);
-        // generatedObjects.Add(background);
     }
 
     private void DespawnObjects()

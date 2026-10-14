@@ -8,13 +8,17 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private Transform player;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     private int distanceScore = 0;
     private int bounceScore = 0;
+    private int highScore = 0;
 
     void Start()
     {
         Instance = this;
+
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
         UpdateScore();
     }
 
@@ -32,7 +36,14 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScore()
     {
+        if (distanceScore + bounceScore > highScore)
+        {
+            highScore = distanceScore + bounceScore;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
+
         scoreText.text = "Score: " + (distanceScore + bounceScore);
+        highScoreText.text = "High Score: " + highScore;
     }
 
     public int GetTotalScore()

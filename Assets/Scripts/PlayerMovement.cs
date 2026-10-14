@@ -3,8 +3,9 @@ using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float startingMoveSpeed = 5f;
 
+    private float currentMoveSpeed;
     private Vector2 direction;
     private Rigidbody2D playerBody;
 
@@ -12,12 +13,17 @@ public class PlayerMovement : MonoBehaviour
     {
         playerBody = GetComponent<Rigidbody2D>();
         direction = Vector2.right;
+        currentMoveSpeed = startingMoveSpeed;
+    }
+
+    void Update()
+    {
+        currentMoveSpeed = startingMoveSpeed * DifficultyTracker.Instance.GetCurrentDifficulty();
     }
 
     void FixedUpdate()
     {
-        //playerBody.MovePosition(playerBody.position + direction * moveSpeed * Time.fixedDeltaTime);
-        playerBody.linearVelocity = direction * moveSpeed;
+        playerBody.linearVelocity = direction * currentMoveSpeed;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
